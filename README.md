@@ -5,6 +5,8 @@ Its a message-based protocol, sending frames between master and slave.
 
 Please consult the [examples](./examples), [config.h](./src/config.h) and the [source-code](./src) for additional informations.
 
+You are welcome to contribute. Add some Documentation, post Issues or (preffered) Pull requests. Contact me if you plan a major-change.
+
 # Roles
 ## Master
 Each environment requires one master. It controls the bus and request its slaves to send data. A master can talk to everyone in the environment.
@@ -81,27 +83,29 @@ You can also affect the behavior of a node by using some code-commands (see[exam
 
 ## Synchronous Modes
 * **SYNCHRONOUS**
-	-> Send wartet bis Push-Antwort da ist
-	-> Poll wartet bis alle Push-Requests beantwortet oder abgelaufen (timeout) sind
-	-> Push wartet bis die Push-Antwort gesendet werden konnte oder abgelaufen ist (timeout)
+  * Send waits till the Push-Answer arrives.
+  * Poll waits till all Push-Requests are answered or timeouted.
+  * Push waits till the Push-Message is sendt or timeouted.
+  * Assure reactive code on every node when you go to synchronous. It gives you full control over the flow of frames. But it also blocks you code with waiting for packets or timeouts.
 * **NEARLYASYNCHRONOUS (DEFAULT)**
-	-> Send wartet nicht auf Push-Antwort
-		-> Wird ein zweites Send oder ein Poll während der Wartezeit auf eine Push-Antwort abgesetzt, wartet dies blokierend
-	-> Poll wartet nicht auf Push-Antwort
-		-> Wird ein zweites Poll oder ein Send während der Wartezeit auf eine Push-Antwort abgesetzt, wartet dies blockierend
-		-> Polling eines Adressbereichs wird unterstützt, verhält sich bis auf den letzten aber immer wie synchron.
-	-> Push wartet nicht auf den Push-Request, sondern arbeitet mit einer Qeue
-		-> Wird ein zweites Push während der Wartezeit abgesetzt, wird dieses ebenfalls in die Qeue aufgenommen
-		-> Ist die Qeue voll, wartet Push blockierend bis die Qeue wieder einen Platz hat
+  * Send donesn't wait for a Push-Answer.
+    * A seconds Send or Poll during the waiting period for the Push-Answer will wait blocking until the Push-Message arrived or timeouted.
+  * Poll donesn't wait for a Push-Answer.
+    * A seconds Send or Poll during the waiting period for the Push-Answer will wait blocking until the Push-Message arrived or timeouted.
+    * Polling a whole Address-Range is supported, but act vor any address like _SYNCHRONOUS_, except the last address.
+    * To avoid this, don't use Range-Polling. Instead implement your own "Range"-Function and use timers and statemachine.
+  * Push  donesn't wait for Push-clearance, instead it works with a qeue.
+    * A second Push during waiting period will also be qeued.
+    * If the qeue is full, Push waits blocking until the qeue gets a free space. You shoud always avoid this condition.
 * **FULLASYNCHRONOUS**
-	-> Send wartet nicht auf Push-Antwort
-		-> Wird ein zweites Send oder ein Poll während der Wartezeit auf eine Push-Antwort abgesetzt, schlägt dieses fehl
-	-> Poll wartet nicht auf Push-Antwort
-		-> Wird ein zweites Poll oder ein Send während der Wartezeit auf eine Push-Antwort abgesetzt, schlägt dieses fehl
-		-> Polling eines Adressbereichs wird nicht unterstützt
-	-> Push wartet nicht auf den Push-Request, sondern arbeitet mit einer Qeue
-		-> Wird ein zweites Push während der Wartezeit abgesetzt, wird dieses ebenfalls in die Qeue aufgenommen
-		-> Ist die Qeue voll, schlägt Push fehl
+  * Send donesn't wait for a Push-Answer.
+    * A seconds Send or Poll during the waiting period for the Push-Answer will fail.
+  * Poll donesn't wait for a Push-Answer.
+    * A seconds Send or Poll during the waiting period for the Push-Answer will fail.
+    * Polling a whole Address-Rage is NOT supported.
+  * Push  donesn't wait for Push-clearance, instead it works with a qeue.
+    * A second Push during waiting period will also be qeued.
+    * If the qeue is full, Push fails.
 
 # Additional Notes
 The order of frames is NOT guaranteed at all. If you need to assure a order, you have to implement it with your own _Service_/Payload.
