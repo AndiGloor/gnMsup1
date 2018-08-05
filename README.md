@@ -58,8 +58,7 @@ You can define your own _Services_. Each Service gets a unique number (the Servi
 | SubService-Nr | Description |
 | --- | --- |
 | `0x00` | **QueryAlive**<br/>Will be sendt together with the Push-Flag.<br/>The slave answers with the same Service/Subservice, without any Palyoad, to signal _i'm alive and responding_. |
-| `0x01` | **Ignore**<br/>The node ignore this frame and doesn't answer (except CommitReceive if CR-Flag is set, or regular pull-message if Pull-Flag is set).<br/>Use this service in combination with _CommitReceive-Flag_ to get a faster alive from a slave than with _QueryAlive-Service_ (minimal timeout, minimal traffic).
- |
+| `0x01` | **Ignore**<br/>The node ignore this frame and doesn't answer (except CommitReceive if CR-Flag is set, or regular pull-message if Pull-Flag is set).<br/>Use this service in combination with _CommitReceive-Flag_ to get a faster alive from a slave than with _QueryAlive-Service_ (minimal timeout, minimal traffic). |
 
 ## Timeouts
 All Timeouts depending on the baudrate.
@@ -75,7 +74,37 @@ You can manipulate them (see [config.h](./src/config.h)).
   * Timeout to send back CRC16. Measured from StopBytes to the last CR-Byte sendt by the node.
   * CommitReceiveTimeout = 0.4 * FrameTimeout
 
+# The implementation
+You can configure many parameters (see [config.h](./src/config.h)).
+Please dont change parameters in the source.
+You can also affect the behavior of a node by using some code-commands (see[examples](./examples)).
+
 ## Synchronous Modes
+* **SYNCHRONOUS**
+	-> Send wartet bis Push-Antwort da ist
+	-> Poll wartet bis alle Push-Requests beantwortet oder abgelaufen (timeout) sind
+	-> Push wartet bis die Push-Antwort gesendet werden konnte oder abgelaufen ist (timeout)
+* **NEARLYASYNCHRONOUS (DEFAULT)**
+	-> Send wartet nicht auf Push-Antwort
+		-> Wird ein zweites Send oder ein Poll während der Wartezeit auf eine Push-Antwort abgesetzt, wartet dies blokierend
+	-> Poll wartet nicht auf Push-Antwort
+		-> Wird ein zweites Poll oder ein Send während der Wartezeit auf eine Push-Antwort abgesetzt, wartet dies blockierend
+		-> Polling eines Adressbereichs wird unterstützt, verhält sich bis auf den letzten aber immer wie synchron.
+	-> Push wartet nicht auf den Push-Request, sondern arbeitet mit einer Qeue
+		-> Wird ein zweites Push während der Wartezeit abgesetzt, wird dieses ebenfalls in die Qeue aufgenommen
+		-> Ist die Qeue voll, wartet Push blockierend bis die Qeue wieder einen Platz hat
+* **FULLASYNCHRONOUS**
+	-> Send wartet nicht auf Push-Antwort
+		-> Wird ein zweites Send oder ein Poll während der Wartezeit auf eine Push-Antwort abgesetzt, schlägt dieses fehl
+	-> Poll wartet nicht auf Push-Antwort
+		-> Wird ein zweites Poll oder ein Send während der Wartezeit auf eine Push-Antwort abgesetzt, schlägt dieses fehl
+		-> Polling eines Adressbereichs wird nicht unterstützt
+	-> Push wartet nicht auf den Push-Request, sondern arbeitet mit einer Qeue
+		-> Wird ein zweites Push während der Wartezeit abgesetzt, wird dieses ebenfalls in die Qeue aufgenommen
+		-> Ist die Qeue voll, schlägt Push fehl
+
+# Additional Notes
+The order of frames is NOT guaranteed at all. If you need to assure a order, you have to implement it with your own _Service_/Payload.
 
 # License
 GnMsup1 stands under the MIT License.
