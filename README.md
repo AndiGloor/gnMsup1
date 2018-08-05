@@ -15,9 +15,15 @@ A environment can have one or many slaves. Each slave is independent, but requir
 | Byte | Type/Value | Description |
 | --- | --- | --- |
 | 00<br/>01 | `0xAA`<br/>`0x55` | __StartBytes__<br/>`1010 1010` // `0101 0101` |
-| 02 | Flagbyte | See [below](#flagbyte) |
+| 02 | Flagbyte | See below |
+| 03 | Addressbyte | See below |
+| 04 | Byte | **PayloadSize**<br/>Payload-Byte count (Byte 07 till ..., without CRC16 |
+| 05 | Byte | Service |
+| 06 | Byte | Subservice |
+| 07... | Bytes | Payload |
+| 08 + ...<br/>09 + ... | UInt16 | **CRC16**<br/>Dhecksum over every Byte excluding Startbytes, excluding CRC16, excluding StopBytes. |
+| 10 + ...<br/>11 + ... | `0x55`<br/>`0xAA` | **StopBytes**<br/>`0101 0101` // `1010 1010` |
 
-<a name="flagbyte" />
 ## Flagbyte
 ABC
 
