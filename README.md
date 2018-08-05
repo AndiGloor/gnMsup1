@@ -1,7 +1,25 @@
 # gnMsup1
-Arduino Library for generic Master/Slave Communications.
-Currently only RS485 as a Hardare-Layer is implemented. But its easy to implement additional Layers like RS232 or others.
+Arduino library for generic master/slave communications.
+Currently only RS485 as a hardare-layer is implemented. But its easy to implement additional layers like RS232 or others. You can use a shared medium or point2point communication.
+Its a message-based protocol, sending frames between master and slave.
 
+# Roles
+## Master
+Each environment requires one master. It controls the bus and request its slaves to send data. A master can talk to everyone in the environment.
+
+## Slave
+A environment can have one or many slaves. Each slave is independent, but requires a master. A slave is just able to talk with the master.
+
+# Protocol Structure
+## Frame
+| Byte | Type/Value | Description |
+| --- | --- | --- |
+| 00<br/>01 | `0xAA`<br/>`0x55` | __StartBytes__<br/>`1010 1010` // `0101 0101` |
+| 02 | Flagbyte | See [below](#flagbyte) |
+
+<a name="flagbyte" />
+## Flagbyte
+ABC
 
 # License
 GnMsup1 stands under the MIT License.
