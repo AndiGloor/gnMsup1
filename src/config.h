@@ -33,7 +33,7 @@
 
  
 
-#define GNMSUP1_DEBUG																						// Uncomment to get useful debug-output by use of attachSerialDebug. But debugging produces much code overhead, affecting program size and speed
+//#define GNMSUP1_DEBUG																						// Uncomment to get useful debug-output by use of attachSerialDebug. But debugging produces much code overhead, affecting program size and speed
 #define GNMSUP1_DEFAULTBLOCKING							NearlyAsynchronous	// See Readme
 #define GNMSUP1_DEFAULTBAUDRATE							9600								// Default Bitrate (can be overwritten in the begin call)
 #define GNMSUP1_MAXPAYLOADBUFFER						8										// Uses Memory, align to maximum Payload-Size
