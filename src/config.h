@@ -6,6 +6,7 @@
  *  THIS IS THE USER-CONFIG FILE.
  *	Edit this File to customize the Protocol to you requirements.
  *  
+ *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
  *  
  *	MIT License

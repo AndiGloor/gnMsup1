@@ -5,6 +5,7 @@
  *  
  *  Tested with Arduino UNOor MEGA2650 and RS485 BUS.
  *  
+ *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
  *  
  *	MIT License
@@ -99,8 +100,8 @@ class gnMsup1 {
 		void handleCommunication();
 		
 		// AttachService - Attaches a Callback Function for a Service (identified by ServiceNumber)
-		typedef void (*ServiceHandlerCallback) (uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize);
-		typedef void (*CatchAllServiceHandlerCallback) (uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize);
+		typedef void (*ServiceHandlerCallback) (uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize, uint8_t sourceAddress);
+		typedef void (*CatchAllServiceHandlerCallback) (uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize, uint8_t sourceAddress);
 		bool attachService(uint8_t serviceNumber, ServiceHandlerCallback serviceHandler);
 		bool attachCatchAllService(CatchAllServiceHandlerCallback serviceHandler) {
 			_callbackCatchAllActive = true;
@@ -127,7 +128,7 @@ class gnMsup1 {
 		// IgnoreInactiveNodes
 		bool setIgnoreInactiveNodes(bool value) {_ignoreInactiveNodes = value;};
 		bool getIgnoreInactiveNodes() {return _ignoreInactiveNodes;};
-		
+				
 		// GetLastComError - Provides additional Informations about the Error occured
 		struct						comError_t {
 												ComErrorCode						comErrorCode	= None;

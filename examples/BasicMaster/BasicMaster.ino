@@ -6,6 +6,7 @@
  *  
  *  Tested with Arduino UNO and RS485 BUS.
  *  
+ *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1    Andreas Gloor            Initial Version
  *  
  *	MIT License

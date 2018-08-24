@@ -1,11 +1,12 @@
-/*  GN Master Slave Universal Protocol Library - Exaple: BasicMaster
- *  ================================================================
+/*  GN Master Slave Universal Protocol Library - Exaple: AdvancedMaster
+ *  ===================================================================
  *  
  *  Library for generic Master/Slave Communications.
- *  This is a simple Example of a Slave that just send out some Commands.
+ *  This is a simple Example of a Master that get and send some Commands.
  *  
  *  Tested with Arduino UNO or MEGA2650 and RS485 BUS.
  *  
+ *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1    Andreas Gloor            Initial Version
  *  
  *  MIT License
@@ -112,7 +113,7 @@ void loop() {
 
 
 // Sample Service-Handler
-void handleLed(uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadCount) {
+void handleLed(uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadCount, uint8_t sourceAddress) {
   devSerialDebug.println(F("AdvMaster:\tThis is LED Service Callback on Master"));                                    // Write some Debug-Output (you can use the same Interface for your own Output)
 
   if (rgbValue[subserviceNumber] < 128) {                                                                             // Toggle the RGB-LED Value based on Subservice
@@ -141,8 +142,10 @@ void handleLed(uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadCount
 
 
 // Sample CatchAll-Handler
-void handleAll(uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadCount) {
-  devSerialDebug.println(F("AdvMaster:\tThis is UNIVERSAL (CatchAll) Service Callback on Master"));                   // Write some Debug-Output (you can use the same Interface for your own Output)
+void handleAll(uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadCount, uint8_t sourceAddress) {
+  devSerialDebug.print(F("AdvMaster:\tThis is UNIVERSAL (CatchAll) Service Callback on Master, called from 0x"));                   // Write some Debug-Output (you can use the same Interface for your own Output)
+	debugPrintHex(sourceAddress);
+      devSerialDebug.println();
   // Here you have to deal with everything, including unknown-Services.
   // For example you can implement a routine that publish a MQTT Message or calls a REST API...
   // Like this you delegate some computing-power to a powerful PC instead of a micro.
