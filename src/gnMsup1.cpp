@@ -5,6 +5,7 @@
  *  
  *  Tested with Arduino UNO or MEGA2650 and RS485 BUS.
  *  
+ *  2018-09-12  V1.2.1		Andreas Gloor            Bugfix pollRange (for FullyAsynchonous) and pushBlockingActive public; handleCommunication called if data available before send
  *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
  *  
@@ -308,7 +309,7 @@ bool gnMsup1::send(uint8_t address, uint8_t serviceNumber, uint8_t subserviceNum
 		return false;
 	}
 	
-	if (_pushBlockingActive()) {																																// Blocking Mode dependent behavior if a push-request is pending 
+	if (pushBlockingActive()) {																																	// Blocking Mode dependent behavior if a push-request is pending 
 		if (_blockingMode == gnMsup1::FullyAsynchronous) {																				// FullyAsynchronous fails if another Request is active
 			#ifdef GNMSUP1_DEBUG
 				if (_debugAttached) {
@@ -371,10 +372,19 @@ bool gnMsup1::pollRange(uint8_t beginAddress, uint8_t endAddress, uint8_t maxMes
 		return false;
 	}
 	
-	if (maxMessagesPerSlave < 1 || _blockingMode == gnMsup1::FullyAsynchronous) {								// Minimum 1 Message per Slave, FullyAsynchonous not allowed
+	if (maxMessagesPerSlave < 1) {																															// Minimum 1 Message per Slave
 		#ifdef GNMSUP1_DEBUG
 			if (_debugAttached) {
-				_debugStream->println(F("ERR: PUSH MINIMUM 1 MESSAGE PER SLAVE OR NOT ALLOWED IN FULLYASYNCHRONOUS MODE."));
+				_debugStream->println(F("ERR: PUSH MINIMUM 1 MESSAGE PER SLAVE."));
+			}
+		#endif
+		return false;
+	}
+	
+	if (maxMessagesPerSlave > 1 && _blockingMode == gnMsup1::FullyAsynchronous) {								// Maximum 1 Message per Slave in FullyAsynchonous
+		#ifdef GNMSUP1_DEBUG
+			if (_debugAttached) {
+				_debugStream->println(F("ERR: PUSH MAXIMUM 1 MESSAGE PER SLAVE IN FULLYASYNCHRONOUS MODE."));
 			}
 		#endif
 		return false;
@@ -390,7 +400,7 @@ bool gnMsup1::pollRange(uint8_t beginAddress, uint8_t endAddress, uint8_t maxMes
 		return false;
 	}
 	
-	if (_pushBlockingActive()) {																																// Blocking Mode dependent behavior if a push-request is pending 
+	if (pushBlockingActive()) {																																	// Blocking Mode dependent behavior if a push-request is pending 
 		if (_blockingMode == gnMsup1::FullyAsynchronous) {																				// FullyAsynchronous fails if another Request is active
 			#ifdef GNMSUP1_DEBUG
 				if (_debugAttached) {
@@ -1025,7 +1035,7 @@ bool gnMsup1::_handleSystemService(bool pushFlag) {
 
 
 
-// PushBlockingWaitForRelease -> Waits until Push-Answer received or Push-Request timeouted (only call after prechecking Mode and _pushBlockingActive()!)
+// PushBlockingWaitForRelease -> Waits until Push-Answer received or Push-Request timeouted (only call after prechecking Mode and pushBlockingActive()!)
 void gnMsup1::_pushBlockingWaitForRelease() {
 	#ifdef GNMSUP1_DEBUG
 		if (_debugAttached) {
@@ -1033,7 +1043,7 @@ void gnMsup1::_pushBlockingWaitForRelease() {
 		}
 	#endif
 	
-	while (_pushBlockingActive()) {
+	while (pushBlockingActive()) {
 		handleCommunication();
 	}
 }
@@ -1085,6 +1095,10 @@ bool gnMsup1::_sendFrame(uint8_t address, uint8_t serviceNumber, uint8_t subserv
 			}
 		#endif
 		return false;
+	}
+	
+	while (_stream->available()) {																															// Process incoming Packets before sending anything
+		handleCommunication();
 	}
 	
 	if (_hwLayer == RS485) {																																		// Set DE for RS485
@@ -1246,7 +1260,7 @@ bool gnMsup1::_sendFrame(uint8_t address, uint8_t serviceNumber, uint8_t subserv
 				#ifdef GNMSUP1_DEBUG
 					if (_debugAttached) {
 						_debugStream->println(F("ERR: CR INVALID"));
-					}
+						}
 				#endif
 				_lastComError.comErrorCode = gnMsup1::Err_CRInvalid;
 				_lastComError.address = address;

@@ -5,6 +5,7 @@
  *  
  *  Tested with Arduino UNOor MEGA2650 and RS485 BUS.
  *  
+ *  2018-09-12  V1.2.1		Andreas Gloor            Bugfix pollRange (for FullyAsynchonous) and pushBlockingActive public; handleCommunication called if data available before send
  *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
  *  
@@ -114,6 +115,7 @@ class gnMsup1 {
 			return push(serviceNumber, subserviceNumber, empty, 0, commitReceivedFlag);
 		}
 		bool push(uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize, bool commitReceivedFlag = false);
+		bool pushBlockingActive() {return millis() - _pushBlockingTimer < GNMSUP1_PUSHTIMEOUT;};
 		// Send - Sends a Frame to a Slave
 		bool send(uint8_t address, uint8_t serviceNumber, uint8_t subserviceNumber, uint8_t payload[], uint8_t payloadSize, bool pushFlag = false, bool commitReceivedFlag = false, bool retryOnCrFailure = false);
 		// Poll - Sends Push-Request to a Slave or a Range of Slaves
@@ -202,7 +204,6 @@ class gnMsup1 {
 											};
 		_pushStore_t			_pushStore[GNMSUP1_MAXPUSHQEUEENTRYS];
 		uint32_t 					_pushBlockingTimer = millis() - GNMSUP1_PUSHTIMEOUT - 1;
-		bool _pushBlockingActive() {return millis() - _pushBlockingTimer < GNMSUP1_PUSHTIMEOUT;};
 		void _pushBlockingSet() {_pushBlockingTimer = millis();};
 		void _pushBlockingRelease() {_pushBlockingTimer = millis() - GNMSUP1_PUSHTIMEOUT - 1;};
 		void _pushBlockingWaitForRelease();
