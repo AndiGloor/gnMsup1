@@ -52,7 +52,7 @@ SoftwareSerial devSerialDebug(PIN_DBGRX, PIN_DBGTX);                            
 
 
 void setup() {
-  pinMode(PIN_R, OUTPUT);                                                                                             // Initialize LED Pins as Output (not neccessary for DE-Pin!)
+  pinMode(PIN_R, OUTPUT);                                                                                             // Initialize LED Pins as Output (not necessary for DE-Pin!)
   pinMode(PIN_G, OUTPUT);
   pinMode(PIN_B, OUTPUT);
   

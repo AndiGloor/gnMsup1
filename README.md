@@ -3,9 +3,9 @@ Arduino library for generic master/slave communications.
 Currently only RS485 as a hardare-layer is implemented. But its easy to implement additional layers like RS232 or others. You can use a shared medium or point2point communication.
 Its a message-based protocol, sending frames between master and slave.
 
-Please consult the [examples](./examples), [config.h](./src/config.h) and the [source-code](./src) for additional informations.
+Please consult the [examples](./examples), [config.h](./src/config.h) and the [source-code](./src) for additional information.
 
-You are welcome to contribute. Add some Documentation, post Issues or (preffered) Pull requests. Contact me if you plan a major-change.
+You are welcome to contribute. Add some Documentation, post Issues or (preferred) Pull requests. Contact me if you plan a major-change.
 
 # Roles
 ## Master
@@ -34,7 +34,7 @@ A environment can have one or many slaves. Each slave is independent, but requir
 | `B1000 0000` | Flag |	**Direction**<br/>0 = Master to Slave<br/>1 = Slave tp Master<br/>This flag is tecnically not neccesarry. But it allows easy debugging on the (shared) bus. |
 | `B0100 0000` | Flag |	**Service**<br/>0 = The frame doesnt contain a _Service_. No PayloadSize-, Service-, Subservice-Byte and no Payload. The CRC16 will still sendt!<br/>1 = The frame contains a _Service_. Payload may still be empty. |
 | `B0010 0000` | Flag |	**Push**<br/>Temporary delegates the permission to send to a slave.<br/><br/>_From master to slave:_<br/>0 = No push-clearance for the slave. So saster still owns the permission.<br/>1 = Push-clearance for the slave. Slave is now allowed (and requested) to answer with a push-message.<br/>The Push-Flag can be set on a regulare frame with payload, or in a short push-request (Service-Flag set to 0).<br/>The slave needs to respect the Push-Timeout.<br/><br/>_From slave to master:_<br/>0 = No more push-messages in qeue.<br/>1 = More push-messages in qeue (request more push-clearance).<br/>The slave answers with _one_ regular frame, including Payload. It is not allowed to send more than one frame. If the slave has more push-messages, it will signal this to the master by setting the Push-Flag.<br/>If a slave doesnt have any push-messages in its qeue, he sends a frame with Service-Flag: 0 & Push-Flag: 0. |
-| `B0001 0000` | Flag |	**CommitReceive (CR)**<br/>If a node (master or slave) gets a frame with CR-Flag, it is requestet to immediatly sendback the CRC16 (just these two bytes, without any Start-/Stopbytes). |
+| `B0001 0000` | Flag |	**CommitReceive (CR)**<br/>If a node (master or slave) gets a frame with CR-Flag, it is requestet to immediately sendback the CRC16 (just these two bytes, without any Start-/Stopbytes). |
 | `B0000 1111` | - |	**Reserved** |
 
 ## Addresses (Address-Byte)
@@ -78,7 +78,7 @@ You can manipulate them (see [config.h](./src/config.h)).
 
 # The implementation
 You can configure many parameters (see [config.h](./src/config.h)).
-Please dont change parameters in the source.
+Please don't change parameters in the source.
 You can also affect the behavior of a node by using some code-commands (see[examples](./examples)).
 
 ## Synchronous Modes
@@ -96,7 +96,7 @@ You can also affect the behavior of a node by using some code-commands (see[exam
     * To avoid this, don't use Range-Polling. Instead implement your own "Range"-Function and use timers and statemachine.
   * Push  donesn't wait for Push-clearance, instead it works with a qeue.
     * A second Push during waiting period will also be qeued.
-    * If the qeue is full, Push waits blocking until the qeue gets a free space. You shoud always avoid this condition.
+    * If the qeue is full, Push waits blocking until the qeue gets a free space. You should always avoid this condition.
 * **FULLASYNCHRONOUS**
   * Send donesn't wait for a Push-Answer.
     * A seconds Send or Poll during the waiting period for the Push-Answer will fail.
