@@ -5,6 +5,7 @@
  *  
  *  Tested with Arduino UNOor MEGA2650 and RS485 BUS.
  *  
+ *  2019-07-30  V1.2.2		Andreas Gloor            Bugfix begin (correct Datatype)
  *  2018-09-12  V1.2.1		Andreas Gloor            Bugfix pollRange (for FullyAsynchonous) and pushBlockingActive public; handleCommunication called if data available before send
  *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
@@ -95,7 +96,7 @@ class gnMsup1 {
 		
 		// Begin (for Serial, with Default-Baudrate)
 		bool begin() {return begin(_baudrate);}
-		bool begin(uint32_t baudRate, uint8_t address = GNMSUP1_MASTERPSEUDOADDRESS);
+		bool begin(int32_t baudRate, uint8_t address = GNMSUP1_MASTERPSEUDOADDRESS);
 		
 		// HandleCommunication - Call this Function during the loop in your Sketch; avoid long delays; Data-Processing happens in callback functions.
 		void handleCommunication();

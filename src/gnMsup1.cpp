@@ -5,6 +5,7 @@
  *  
  *  Tested with Arduino UNO or MEGA2650 and RS485 BUS.
  *  
+ *  2019-07-30  V1.2.2		Andreas Gloor            Bugfix begin (correct Datatype)
  *  2018-09-12  V1.2.1		Andreas Gloor            Bugfix pollRange (for FullyAsynchonous) and pushBlockingActive public; handleCommunication called if data available before send
  *  2018-08-24  V1.1.1		Andreas Gloor            SourceAddress Parameter in Callback Function
  *  2018-07-21  V1.0.1		Andreas Gloor            Initial Version
@@ -84,7 +85,7 @@ gnMsup1::gnMsup1(SoftwareSerial& device, gnMsup1::HardwareLayer hwLayer, uint8_t
 
 
 // Begin -> Call this Function to start the MSUP
-bool gnMsup1::begin(uint32_t baudRate, uint8_t address) {
+bool gnMsup1::begin(int32_t baudRate, uint8_t address) {
 	if (!((_ownsMasterRole() && address == GNMSUP1_MASTERPSEUDOADDRESS) ||											// Validate Master/Slave-Address
 				(!_ownsMasterRole() && address < 0xF0))) {
 		#ifdef GNMSUP1_DEBUG
