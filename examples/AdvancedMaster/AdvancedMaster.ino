@@ -75,16 +75,16 @@ void setup() {
 void loop() {
   master.handleCommunication();                                                                                       // Call the MSUP handleCommunication as much as possible; Avoid long delay() Calls!
 
-  if (millis() - delayTimer > 5000) {                                                                                 // Aequivalent to a delay(5000), but non-blocking!
-    delayTimer = millis();                                                                                            // Usualy you like to use a much lower value like 10ms or 100ms to be more reactive
+  if (millis() - delayTimer > 5000) {                                                                                 // Equivalent to a delay(5000), but non-blocking!
+    delayTimer = millis();                                                                                            // Usually you like to use a much lower value like 10ms or 100ms to be more reactive
     master.pollRange(0x00, 0x0F, 2, true, true);                                                                      // Poll a Range of Slaves for 2 Messages (allow them to send there Push-Messages, with CommitReceive)
                                                                                                                       // Note: by using setIgnoreInactiveNodes(true) and commitReceive Flag, the Master marks nodes with no response and 'blacklist' them.
-                                                                                                                      // So next time this nodes will be skiped. Archive more robustness by set retryOnCrFailure (so a failed node will tested two-times bevore blacklisting.
+                                                                                                                      // So next time this nodes will be skiped. Archive more robustness by set retryOnCrFailure (so a failed node will tested two-times before blacklisting.
 
-    gnMsup1::comError_t lastComError = master.getLastComError();                                                      // Read out the last Communication-Error and provide some useful informations
+    gnMsup1::comError_t lastComError = master.getLastComError();                                                      // Read out the last Communication-Error and provide some useful information
     if (lastComError.comErrorCode != gnMsup1::None) {
       devSerialDebug.println();
-      devSerialDebug.print(F("AdvMaster:\tCommunication Error occured during last Period: "));
+      devSerialDebug.print(F("AdvMaster:\tCommunication Error occurred during last Period: "));
       switch (lastComError.comErrorCode) {
         case gnMsup1::Err_CRInvalid:
           devSerialDebug.println(F("CommitReturn received, but invalid Data."));

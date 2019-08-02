@@ -61,7 +61,7 @@ uint8_t rgbValue[3] = {0, 0, 0};                                                
 
 void setup() {
   pinMode(PIN_ADDR0, INPUT_PULLUP);                                                                                   // Initialize Address-Pin
-  pinMode(PIN_LEDR, OUTPUT);                                                                                          // Initialize LED Pins as Output (not neccessary for DE-Pin!)
+  pinMode(PIN_LEDR, OUTPUT);                                                                                          // Initialize LED Pins as Output (not necessary for DE-Pin!)
   pinMode(PIN_LEDG, OUTPUT);
   pinMode(PIN_LEDB, OUTPUT);
   pinMode(PIN_BTNR, INPUT_PULLUP);                                                                                    // Initialize Push-Button Pins as Input with a Pullup and initialize the Debouncer
@@ -88,7 +88,7 @@ void setup() {
 
   slave.attachService(0x10, handleLed);                                                                               // Attach a Service (Nr. 0x10) to MSUP; Use a Handler-Function to provide as a Callback
 
-  uint8_t addr = SLAVE_ADDRESS_MSB | digitalRead(PIN_ADDR0);                                                          // Get's the Address using Address-Pin and Configured Base-Address.
+  uint8_t addr = SLAVE_ADDRESS_MSB | digitalRead(PIN_ADDR0);                                                          // Gets the Address using Address-Pin and Configured Base-Address.
   slave.begin(115200, addr);                                                                                          // Start the MSUP Slave
 }
 
@@ -113,7 +113,7 @@ void loop() {
 
 
   /*
-  // 2nd Example: A alternate way to implement this service woud be something like this:
+  // 2nd Example: A alternate way to implement this service would be something like this:
   bool sendTrigger = false;                                                                                           // These lines use a 3-byte payload instead of the subservice
   for (uint8_t i = 0; i < 3; i++) {                                                                                   // Its more logic needed and the behavior is different from the one above
     if (debouncer[i].update()) {

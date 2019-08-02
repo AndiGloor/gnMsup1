@@ -132,7 +132,7 @@ class gnMsup1 {
 		bool setIgnoreInactiveNodes(bool value) {_ignoreInactiveNodes = value;};
 		bool getIgnoreInactiveNodes() {return _ignoreInactiveNodes;};
 				
-		// GetLastComError - Provides additional Informations about the Error occured
+		// GetLastComError - Provides additional Information about the Error occurred
 		struct						comError_t {
 												ComErrorCode						comErrorCode	= None;
 												uint8_t									address				= GNMSUP1_MASTERPSEUDOADDRESS;

@@ -145,7 +145,7 @@ bool gnMsup1::begin(int32_t baudRate, uint8_t address) {
 
 // HandleCommunication -> Call this Function during the loop in your Sketch; avoid long delays
 void gnMsup1::handleCommunication() {
-	if (!_initialized) {																																				// Dont proceed until initialized
+	if (!_initialized) {																																				// Don't proceed until initialized
 		return;
 	}
 	
@@ -169,7 +169,7 @@ bool gnMsup1::attachService(uint8_t serviceNumber, gnMsup1::ServiceHandlerCallba
 		return false;
 	}
 	
-	if (_getCallbackStoreNr(serviceNumber) == GNMSUP1_NOTINSTORE) {															// Check if allready in Store
+	if (_getCallbackStoreNr(serviceNumber) == GNMSUP1_NOTINSTORE) {															// Check if already in Store
 		_callbackStore[_callbackStoreNextFree] = {serviceNumber, serviceHandler};
 		_callbackStoreNextFree++;
 	
@@ -186,7 +186,7 @@ bool gnMsup1::attachService(uint8_t serviceNumber, gnMsup1::ServiceHandlerCallba
 			if (_debugAttached) {
 				_debugStream->print(F("ERR:SERVICE 0x"));
 				_debugPrintHex(serviceNumber);
-				_debugStream->println(F(" ALLREADY ATTACHED"));
+				_debugStream->println(F(" ALREADY ATTACHED"));
 			}
 		#endif
 		return false;
@@ -463,7 +463,7 @@ bool gnMsup1::pollRange(uint8_t beginAddress, uint8_t endAddress, uint8_t maxMes
 				#endif
 			}
 			
-			if (!_additionalPushMsgAvailable) {																											// Break remainingMessages for, if this was the last message (-- occures bevor for checks the condition again, so this gives a zero and falls out of for...)
+			if (!_additionalPushMsgAvailable) {																											// Break remainingMessages for, if this was the last message (-- occurs bevor for checks the condition again, so this gives a zero and falls out of for...)
 				remainingMessages = 1;
 			}
 		}
@@ -473,7 +473,7 @@ bool gnMsup1::pollRange(uint8_t beginAddress, uint8_t endAddress, uint8_t maxMes
 
 
 
-// GetLastComError - Provides additional Informations about the Error occurred (and reset the ErrorStore)
+// GetLastComError - Provides additional Information about the Error occurred (and reset the ErrorStore)
 gnMsup1::comError_t gnMsup1::getLastComError() {
 	comError_t last = _lastComError;
 	comError_t empty;
@@ -840,7 +840,7 @@ void gnMsup1::_processFrame() {
 					#endif
 				}
 				
-			} else {																																								// Let the master know, that we dont have any PushMessages for him
+			} else {																																								// Let the master know, that we don't have any PushMessages for him
 				#ifdef GNMSUP1_DEBUG
 					if (_debugAttached) {
 						_debugStream->println(F("NO PUSH MESSAGES, INFORM MASTER"));
@@ -1308,7 +1308,7 @@ bool gnMsup1::_sendFrame(uint8_t address, uint8_t serviceNumber, uint8_t subserv
 
 
 
-// Query if a Node shoud be ignored (on Slaves return always false, if IgnoreInactiveNodes is off return always false)
+// Query if a Node should be ignored (on Slaves return always false, if IgnoreInactiveNodes is off return always false)
 bool gnMsup1::_queryIgnore(uint8_t address) {
 	if (!(_ownsMasterRole()) || !(_ignoreInactiveNodes)) {																			// Shortcut for Slaves or inactive IgnoreInactiveNodes Mode
 		return false;
@@ -1381,7 +1381,7 @@ void gnMsup1::_scavengingInactive() {
 				if (_queryActive(address)) {																													// If node already known as active, reset its status and goto next address
 					_resetActiveIgnore(address);
 					
-				} else if (_queryIgnore(address)) {																										// If node is currently ingored, rescan him
+				} else if (_queryIgnore(address)) {																										// If node is currently ignored, rescan him
 					scavengingOk = true;
 					
 					#ifdef GNMSUP1_DEBUG

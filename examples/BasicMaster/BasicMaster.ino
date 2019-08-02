@@ -64,7 +64,7 @@ void setup() {
 void loop() {
   master.handleCommunication();                                                                                       // Call the MSUP handleCommunication as much as possible; Avoid long delay() Calls!
 
-  if (millis() - delayTimer > 600) {                                                                                  // Aequivalent to a delay(600), but non-blocking!
+  if (millis() - delayTimer > 600) {                                                                                  // Equivalent to a delay(600), but non-blocking!
     uint8_t address = random(0, 2);                                                                                   // Define the Parameter-Values, using some random Values...
     uint8_t serviceNumber = 0x10;
     uint8_t subserviceNumber = 0x00;
