@@ -8,7 +8,7 @@ Please consult the [examples](./examples), [config.h](./src/config.h) and the [s
 
 You are welcome to contribute. Add some Documentation, post Issues or (preferred) Pull requests. Contact me if you plan a major-change.
 
-## Branches
+## Branches/Roles
 
 ### Master
 Each environment requires one master. It controls the bus and request its slaves to send data. A master can talk to everyone in the environment.
